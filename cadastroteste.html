@@ -10,14 +10,11 @@
     
     <!-- Formulário de Cadastro -->
     <form id="cadastroTesteForm">
-        <!-- Código Interno -->
-        <label for="codigoInterno">Código Interno (Código de Barras):</label>
-        <input type="text" id="codigoInterno" name="codigoInterno" placeholder="Escaneie o código de barras" readonly><br><br>
+        <!-- Código Interno (Escaneado ou Digitado) -->
+        <label for="codigoInterno">Código Interno:</label>
+        <input type="text" id="codigoInterno" name="codigoInterno" placeholder="Digite ou escaneie o código de barras" required readonly><br><br>
         <button type="button" id="iniciarCameraBtn" class="btn">Ativar Câmera</button>
         <button type="button" id="pararCameraBtn" class="btn" style="display: none;">Parar Câmera</button><br><br>
-
-        <!-- Área de Leitura de Câmera -->
-        <div id="leitor-codigo" class="camera-view"></div><br>
 
         <!-- Nome -->
         <label for="nome">Nome:</label>
@@ -45,6 +42,9 @@
         <button type="submit">Salvar</button>
     </form>
 
+    <!-- Área de Leitura de Câmera -->
+    <div id="leitor-codigo" class="camera-view"></div>
+
     <!-- Importa a biblioteca Html5-qrcode da CDN -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
@@ -56,11 +56,11 @@
     <!-- Carregar a configuração do Firebase -->
     <script src="firebaseConfig.js"></script>
 
-    <!-- Script de escaneamento e cadastro -->
+    <!-- Script para escaneamento e salvar dados no Firestore -->
     <script>
         // Inicializa o Html5QrCode e configura o leitor de código
         const html5QrCode = new Html5QrCode("leitor-codigo");
-        let cameraIsRunning = false;  // Variável para verificar se a câmera está rodando
+        let cameraIsRunning = false;
 
         // Função chamada ao escanear o código de barras com sucesso
         function onScanSuccess(decodedText, decodedResult) {
@@ -114,12 +114,6 @@
             const quantidade = parseFloat(document.getElementById('quantidade').value);
             const unidade = document.getElementById('unidade').value;
             const fracionado = document.getElementById('fracionado').checked;
-
-            // Validação simples
-            if (!codigoInterno || !nome) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
 
             // Salvando no Firestore
             firestore.collection('testecadastro').add({
