@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+</head>
+<body>
+    <h1>Cadastro de Produtos</h1>
+    
+    <!-- Formulário de Cadastro -->
+    <form id="cadastroTesteForm">
+        <!-- Código Interno -->
+        <label for="codigoInterno">Código Interno (Código de Barras):</label>
+        <input type="text" id="codigoInterno" name="codigoInterno" placeholder="Escaneie o código de barras" readonly><br><br>
+        <button type="button" id="iniciarCameraBtn" class="btn">Ativar Câmera</button>
+        <button type="button" id="pararCameraBtn" class="btn" style="display: none;">Parar Câmera</button><br><br>
+
+        <!-- Área de Leitura de Câmera -->
+        <div id="leitor-codigo" class="camera-view"></div><br>
+
+        <!-- Nome -->
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <!-- Grupo -->
+        <label for="grupo">Grupo:</label>
+        <input type="text" id="grupo" name="grupo" required><br><br>
+
+        <!-- Quantidade -->
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" id="quantidade" name="quantidade" required><br><br>
+
+        <!-- Unidade (Pesável) -->
+        <label for="unidade">Unidade (Pesável):</label>
+        <select id="unidade" name="unidade" required>
+            <option value="kg">kg</option>
+            <option value="UN">UN</option>
+        </select><br><br>
+
+        <!-- Fracionado -->
+        <label for="fracionado">Fracionado:</label>
+        <input type="checkbox" id="fracionado" name="fracionado"><br><br>
+
+        <button type="submit">Salvar</button>
+    </form>
+
+    <!-- Importa a biblioteca Html5-qrcode da CDN -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <!-- Firebase e Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script> <!-- Firestore -->
+
+    <!-- Carregar a configuração do Firebase -->
+    <script src="firebaseConfig.js"></script>
+
+    <!-- Script de escaneamento e cadastro -->
+    <script>
+        // Inicializa o Html5QrCode e configura o leitor de código
+        const html5QrCode = new Html5QrCode("leitor-codigo");
+        let cameraIsRunning = false;  // Variável para verificar se a câmera está rodando
+
+        // Função chamada ao escanear o código de barras com sucesso
+        function onScanSuccess(decodedText, decodedResult) {
+            if (cameraIsRunning) {
+                document.getElementById('codigoInterno').value = decodedText; // Preenche o campo com o código escaneado
+                html5QrCode.stop().then(() => {
+                    cameraIsRunning = false;
+                    document.getElementById('pararCameraBtn').style.display = "none";
+                }).catch(err => console.error("Erro ao parar a câmera: ", err));
+            }
+        }
+
+        // Função para lidar com falhas na leitura
+        function onScanFailure(error) {
+            console.warn(`Erro ao escanear código: ${error}`);
+        }
+
+        // Botão para ativar a câmera
+        document.getElementById('iniciarCameraBtn').addEventListener('click', function() {
+            if (!cameraIsRunning) {
+                html5QrCode.start(
+                    { facingMode: { exact: "environment" } }, // Câmera traseira
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    onScanSuccess,
+                    onScanFailure
+                ).then(() => {
+                    cameraIsRunning = true;
+                    document.getElementById('pararCameraBtn').style.display = "block";
+                }).catch(err => console.error("Erro ao iniciar a câmera: ", err));
+            }
+        });
+
+        // Botão para parar a câmera
+        document.getElementById('pararCameraBtn').addEventListener('click', function() {
+            if (cameraIsRunning) {
+                html5QrCode.stop().then(() => {
+                    cameraIsRunning = false;
+                    document.getElementById('pararCameraBtn').style.display = "none";
+                }).catch(err => console.error("Erro ao parar a câmera: ", err));
+            }
+        });
+
+        // Salvando o produto no Firestore
+        document.getElementById('cadastroTesteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Coletando os dados do formulário
+            const codigoInterno = document.getElementById('codigoInterno').value;
+            const nome = document.getElementById('nome').value;
+            const grupo = document.getElementById('grupo').value;
+            const quantidade = parseFloat(document.getElementById('quantidade').value);
+            const unidade = document.getElementById('unidade').value;
+            const fracionado = document.getElementById('fracionado').checked;
+
+            // Validação simples
+            if (!codigoInterno || !nome) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            // Salvando no Firestore
+            firestore.collection('testecadastro').add({
+                codigoInterno: codigoInterno,
+                nome: nome,
+                grupo: grupo,
+                quantidade: quantidade,
+                unidade: unidade,
+                fracionado: fracionado,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                alert('Produto cadastrado com sucesso!');
+                document.getElementById('cadastroTesteForm').reset();
+            }).catch(error => {
+                console.error('Erro ao salvar os dados:', error);
+            });
+        });
+    </script>
+</body>
+</html>
