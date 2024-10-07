@@ -1,5 +1,5 @@
 /* Estilos globais aplicados a todos os dispositivos */
-html, body {
+html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -9,6 +9,10 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+body {
+    opacity: 100%;
 }
 
 /* Animações e transições */
