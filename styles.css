@@ -1,67 +1,111 @@
-body, html {
+/* styles.css */
+
+/* Estilos globais aplicados a todos os dispositivos */
+html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    background: linear-gradient(to top left, #fef3c7, #fde68a, #dda919); /* Gradiente suave com tons alaranjados */
+    height: 100%; /* Garantir que ocupe a tela inteira */
+    overflow-x: hidden; /* Impede que haja rolagem horizontal */
+    overflow: hidden; /* Remove a barra de rolagem */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
 }
 
+
+/* Container principal que centraliza o conteúdo */
 .container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Alinha o conteúdo à esquerda */
+    text-align: left; /* Garante que o texto fique alinhado à esquerda */
+    background-color: rgba(255, 255, 255, 0.8); /* Fundo branco suave para destacar o conteúdo */
+    padding: 40px 60px;
+    border-radius: 20px; /* Bordas arredondadas para um visual moderno */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    max-width: 900px; /* Largura máxima do container */
+    width: 90%;
 }
 
+/* Estilo para o texto principal */
 h1 {
-    margin-bottom: 20px;
+    font-size: 36px;
+    color: #2b1330; /* Cor de texto escuro para contraste */
+    margin: 10px 0 20px 0;
 }
 
-label {
-    text-align: left;
-    width: 100%;
+/* Estilo para o texto secundário */
+h3 {
+    font-size: 18px;
+    color: #4b5563; /* Cinza suave para o texto secundário */
+    max-width: 600px; /* Limita a largura do texto para melhor legibilidade */
+    margin: 0 0 30px 0;
+    line-height: 1.5; /* Melhor espaçamento entre linhas */
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+/* Estilo do botão de redirecionamento */
+.btn-redirect {
+    padding: 12px 24px;
+    background-color: #ff7043; /* Cor de destaque no botão em laranja */
+    color: white; /* Cor do texto no botão */
+    text-decoration: none; /* Remove sublinhado padrão de links */
+    border-radius: 8px; /* Bordas arredondadas para um visual mais moderno */
+    transition: background-color 0.3s ease; /* Efeito suave de mudança de cor */
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidade */
 }
 
-.btn {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
+.btn-redirect:hover {
+    background-color: #f4511e; /* Cor mais intensa ao passar o mouse */
+}
+
+/* Estilo do botão de login */
+#login-google {
+    padding: 10px 20px;
+    background-color: #4285F4; /* Cor padrão do botão de login */
     color: white;
-    text-align: center;
     border: none;
-    border-radius: 5px;
-    margin-bottom: 10px;
     cursor: pointer;
+    margin-top: 10px;
+    border-radius: 8px; /* Bordas arredondadas para consistência com o design */
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+/* Estilo para o botão de login no desktop - desativado */
+@media (min-width: 769px) {
+    #login-google {
+        background-color: #b0b0b0; /* Cor acinzentada para indicar que está desativado */
+        color: #ffffff; /* Texto em branco para contraste */
+        cursor: not-allowed; /* Cursor indicando que não é clicável */
+        opacity: 0.6; /* Transparência para reforçar que está desativado */
+        pointer-events: none; /* Desativa completamente a interação com o botão */
+    }
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
+/* Estilo para dispositivos móveis */
 @media (max-width: 768px) {
     .container {
-        width: 90%;
+        background: linear-gradient(to bottom, #ffb74d, #ff9800); /* Ajusta o gradiente para mobile */
+    }
+
+    h1 {
+        font-size: 28px; /* Texto um pouco menor para caber em telas pequenas */
+    }
+
+    h3 {
+        font-size: 16px; /* Ajuste do tamanho para melhorar legibilidade */
+    }
+
+    .btn-redirect {
+        padding: 8px 16px; /* Botão ligeiramente menor para dispositivos móveis */
+    }
+
+    #login-google {
+        background-color: #4285F4; /* Restabelece a cor do botão de login para dispositivos móveis */
+        cursor: pointer; /* Cursor padrão para interação */
+        opacity: 1; /* Remove a transparência */
+        pointer-events: auto; /* Garante que o botão seja clicável no mobile */
     }
 }
