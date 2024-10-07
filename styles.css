@@ -1,3 +1,7 @@
+* {
+    text-decoration: none;
+}
+
 /* Estilos globais aplicados a todos os dispositivos */
 html {
     margin: 0;
@@ -9,6 +13,7 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+    
 }
 
 body {
@@ -25,10 +30,10 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center; /* Alinha o conteúdo ao centro para combinar com a referência */
+    text-align: center; /* Texto centralizado */
     background-color: rgba(255, 255, 255, 0.9);
-    padding: 40px 60px;
+    padding: 20px 30px;
     border-radius: 20px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     max-width: 900px;
@@ -62,6 +67,48 @@ body {
     .mobile-content {
         display: block; /* Mostrar conteúdo de mobile */
     }
+}
+
+/* Estilo para a grade de itens do menu */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+    gap: 20px; /* Espaçamento entre os itens */
+    width: 100%; /* Largura completa */
+    margin-top: 20px; /* Espaçamento superior entre o título e os itens */
+}
+
+/* Estilo para cada item do menu */
+.menu-item {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para os ícones e texto dos itens do menu */
+.menu-item img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.menu-item span {
+    font-size: 16px;
+    color: #2b1330;
+    font-weight: bold;
 }
 
 /* Estilo do botão de redirecionamento */
@@ -107,4 +154,19 @@ body {
         opacity: 0.6;
         pointer-events: none;
     }
+}
+
+
+/* Estilo para os ícones e texto dos itens do menu */
+.menu-item i {
+    font-size: 40px; /* Tamanho do ícone */
+    color: #2b1330; /* Cor do ícone */
+    margin-bottom: 20px; /* Espaçamento entre o ícone e o texto */
+    text-decoration: none;
+}
+
+.menu-item span {
+    font-size: 16px;
+    color: #2b1330;
+    font-weight: bold;
 }
