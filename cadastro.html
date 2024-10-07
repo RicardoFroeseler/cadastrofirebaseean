@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Mercadorias</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Mercadorias</h1>
+
+        <!-- Exibição da versão do App -->
+        <p class="app-version">Versão do App: 2.3</p>
+
+        <!-- Formulário de Cadastro -->
+        <form id="cadastroMercadoriaForm">
+            <!-- Campo para Código Interno (Código de Barras ou QR Code) -->
+            <div class="form-group">
+                <label for="codigoInterno">Código Interno (Código de Barras):</label>
+                <input type="text" id="codigoInterno" name="codigoInterno" placeholder="Escaneie o código de barras" readonly>
+                <button type="button" id="iniciarCameraBtn" class="btn">Ativar Câmera</button>
+                <button type="button" id="pararCameraBtn" class="btn" style="display: none;">Parar Câmera</button>
+            </div>
+
+            <!-- Área de Leitura de Câmera -->
+            <div id="leitor-codigo" class="camera-view"></div>
+
+            <!-- Campo para Nome/Descrição -->
+            <div class="form-group">
+                <label for="nome">Nome ou Descrição:</label>
+                <input type="text" id="nome" name="nome" placeholder="Insira o nome ou descrição">
+            </div>
+
+            <!-- Campo para Preço de Custo -->
+            <div class="form-group">
+                <label for="precoCusto">Preço de Custo:</label>
+                <input type="bolean" id="precoCusto" name="precoCusto" placeholder="Preço de Custo">
+            </div>
+
+            <!-- Campo para Preço de Venda -->
+            <div class="form-group">
+                <label for="precoVenda">Preço de Venda:</label>
+                <input type="bolean" id="precoVenda" name="precoVenda" placeholder="Preço de Venda">
+            </div>
+
+            <!-- Campo para Grupo -->
+            <div class="form-group">
+                <label for="grupo">Grupo:</label>
+                <input type="text" id="grupo" name="grupo" placeholder="Grupo da Mercadoria">
+            </div>
+
+            <!-- Campo opcional para Quantidade -->
+            <div class="form-group">
+                <label for="quantidade">Quantidade (opcional):</label>
+                <input type="number" id="quantidade" name="quantidade" placeholder="Quantidade">
+            </div>
+
+            <!-- Campo para Unidade de Medida -->
+            <div class="form-group">
+                <label for="unidade">Unidade:</label>
+                <select id="unidade" name="unidade">
+                    <option value="kg">kg</option>
+                    <option value="un">un</option>
+                </select>
+            </div>
+
+            <!-- Checkbox para Fracionado -->
+            <div class="form-group">
+                <label for="fracionado">Fracionado:</label>
+                <input type="checkbox" id="fracionado" name="fracionado">
+            </div>
+
+            <!-- Botão para Enviar o Formulário -->
+            <button type="submit" class="btn">Cadastrar Mercadoria</button>
+        </form>
+    </div>
+
+    <!-- Firebase e Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- Carregar a configuração do Firebase -->
+    <script src="firebaseConfig.js"></script>
+
+    <!-- Importa a biblioteca Html5-qrcode da CDN -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <!-- Importa o script de câmera -->
+    <script src="camera.js"></script>
+
+    <!-- Script para salvar dados no Firestore -->
+    <script>
+        document.getElementById('cadastroMercadoriaForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Previne o envio padrão do formulário
+
+            // Coleta os dados do formulário
+            const codigoInterno = document.getElementById('codigoInterno').value;
+            const nome = document.getElementById('nome').value;
+            const precoCusto = parseFloat(document.getElementById('precoCusto').value);
+            const precoVenda = parseFloat(document.getElementById('precoVenda').value);
+            const grupo = document.getElementById('grupo').value;
+            const quantidade = parseFloat(document.getElementById('quantidade').value);
+            const unidade = document.getElementById('unidade').value;
+            const fracionado = document.getElementById('fracionado').checked; // Checkbox retorna true ou false
+
+            // Salva no Firestore
+            firestore.collection('produtos').add({
+                codigoInterno: codigoInterno,
+                nome: nome,
+                precoCusto: precoCusto,
+                precoVenda: precoVenda,
+                grupo: grupo,
+                quantidade: quantidade,
+                unidade: unidade,
+                fracionado: fracionado,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() // Adiciona um timestamp
+            }).then(() => {
+                alert('Produto cadastrado com sucesso!');
+                document.getElementById('cadastroMercadoriaForm').reset(); // Limpa o formulário
+            }).catch((error) => {
+                console.error('Erro ao salvar os dados:', error);
+            });
+        });
+    </script>
+</body>
+</html>
