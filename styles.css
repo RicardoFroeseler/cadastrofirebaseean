@@ -1,111 +1,106 @@
-/* styles.css */
-
 /* Estilos globais aplicados a todos os dispositivos */
-html {
+html, body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(to top left, #fef3c7, #fde68a, #dda919); /* Gradiente suave com tons alaranjados */
-    height: 100%; /* Garantir que ocupe a tela inteira */
-    overflow-x: hidden; /* Impede que haja rolagem horizontal */
-    overflow: hidden; /* Remove a barra de rolagem */
+    background: linear-gradient(to top left, #fef3c7, #fde68a, #dda919);
+    height: 100vh;
+    overflow-x: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* Animações e transições */
+.container {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
 
 /* Container principal que centraliza o conteúdo */
 .container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start; /* Alinha o conteúdo à esquerda */
-    text-align: left; /* Garante que o texto fique alinhado à esquerda */
-    background-color: rgba(255, 255, 255, 0.8); /* Fundo branco suave para destacar o conteúdo */
+    align-items: flex-start;
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 40px 60px;
-    border-radius: 20px; /* Bordas arredondadas para um visual moderno */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    max-width: 900px; /* Largura máxima do container */
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
     width: 90%;
+    animation: fadeIn 0.8s ease-in-out; /* Animação de entrada */
 }
 
-/* Estilo para o texto principal */
-h1 {
-    font-size: 36px;
-    color: #2b1330; /* Cor de texto escuro para contraste */
-    margin: 10px 0 20px 0;
+/* Efeito de animação de fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Estilo para o texto secundário */
-h3 {
-    font-size: 18px;
-    color: #4b5563; /* Cinza suave para o texto secundário */
-    max-width: 600px; /* Limita a largura do texto para melhor legibilidade */
-    margin: 0 0 30px 0;
-    line-height: 1.5; /* Melhor espaçamento entre linhas */
+/* Ocultar conteúdo mobile por padrão */
+.mobile-content {
+    display: none;
+}
+
+/* Mostrar conteúdo mobile e ocultar desktop quando for uma tela pequena */
+@media (max-width: 768px) {
+    .desktop-content {
+        display: none; /* Esconder conteúdo de desktop em telas pequenas */
+    }
+
+    .mobile-content {
+        display: block; /* Mostrar conteúdo de mobile */
+    }
 }
 
 /* Estilo do botão de redirecionamento */
 .btn-redirect {
     padding: 12px 24px;
-    background-color: #ff7043; /* Cor de destaque no botão em laranja */
-    color: white; /* Cor do texto no botão */
-    text-decoration: none; /* Remove sublinhado padrão de links */
-    border-radius: 8px; /* Bordas arredondadas para um visual mais moderno */
-    transition: background-color 0.3s ease; /* Efeito suave de mudança de cor */
+    background-color: #ff7043;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidade */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn-redirect:hover {
-    background-color: #f4511e; /* Cor mais intensa ao passar o mouse */
+    background-color: #f4511e;
+    transform: scale(1.05); /* Leve aumento ao passar o mouse */
 }
 
 /* Estilo do botão de login */
 #login-google {
     padding: 10px 20px;
-    background-color: #4285F4; /* Cor padrão do botão de login */
+    background-color: #4285F4;
     color: white;
     border: none;
     cursor: pointer;
     margin-top: 10px;
-    border-radius: 8px; /* Bordas arredondadas para consistência com o design */
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#login-google:hover {
+    background-color: #3367d6;
+    transform: scale(1.05); /* Leve aumento ao passar o mouse */
 }
 
 /* Estilo para o botão de login no desktop - desativado */
 @media (min-width: 769px) {
     #login-google {
-        background-color: #b0b0b0; /* Cor acinzentada para indicar que está desativado */
-        color: #ffffff; /* Texto em branco para contraste */
-        cursor: not-allowed; /* Cursor indicando que não é clicável */
-        opacity: 0.6; /* Transparência para reforçar que está desativado */
-        pointer-events: none; /* Desativa completamente a interação com o botão */
-    }
-}
-
-/* Estilo para dispositivos móveis */
-@media (max-width: 768px) {
-    .container {
-        background: linear-gradient(to bottom, #ffb74d, #ff9800); /* Ajusta o gradiente para mobile */
-    }
-
-    h1 {
-        font-size: 28px; /* Texto um pouco menor para caber em telas pequenas */
-    }
-
-    h3 {
-        font-size: 16px; /* Ajuste do tamanho para melhorar legibilidade */
-    }
-
-    .btn-redirect {
-        padding: 8px 16px; /* Botão ligeiramente menor para dispositivos móveis */
-    }
-
-    #login-google {
-        background-color: #4285F4; /* Restabelece a cor do botão de login para dispositivos móveis */
-        cursor: pointer; /* Cursor padrão para interação */
-        opacity: 1; /* Remove a transparência */
-        pointer-events: auto; /* Garante que o botão seja clicável no mobile */
+        background-color: #b0b0b0;
+        color: #ffffff;
+        cursor: not-allowed;
+        opacity: 0.6;
+        pointer-events: none;
     }
 }
