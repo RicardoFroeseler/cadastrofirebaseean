@@ -72,7 +72,7 @@ body {
 /* Estilo para a grade de itens do menu */
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+    grid-template-columns: repeat(1, 1fr);
     gap: 20px; /* Espaçamento entre os itens */
     width: 100%; /* Largura completa */
     margin-top: 20px; /* Espaçamento superior entre o título e os itens */
