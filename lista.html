@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar/Deletar Produtos</title>
-    <link rel="stylesheet" href="./assets/styles/styles.css">
-    
+    <link rel="stylesheet" href="./assets/styles/lista.css">
 
     <!-- Cor da barra de navegação no Android (Chrome) -->
     <meta name="theme-color" content="#dda919">
@@ -13,18 +12,22 @@
     <!-- Cor da barra de status no iOS (Safari) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
 </head>
 <body>
     <div class="container">
-        <h1>Editar/Deletar Produtos</h1>
+        <h1>Lista de Produtos</h1>
+
+        <!-- Campo de busca para filtrar produtos pelo Código de Barras -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Digite o Código de Barras para buscar...">
+            <button onclick="filtrarProdutos()">Buscar</button>
+        </div>
+
         <table id="product-list">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>Preço de Custo</th>
-                    <th>Preço de Venda</th>
-                    <th>Grupo</th>
+                    <th>Nome do Produto</th>
+                    <th>Código de Barras</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -34,7 +37,87 @@
         </table>
     </div>
 
-    <!-- Carrega o script principal -->
-    <script type="module" src="script.js"></script>
+    <!-- Firebase e Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- Carregar a configuração do Firebase -->
+    <script src="firebaseConfig.js"></script>
+
+    <!-- Script para listar e filtrar os produtos do usuário autenticado -->
+    <script>
+        // Certifica-se de que o Firebase está inicializado e verifica se o usuário está logado
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                listarProdutos(user.email); // Chama a função para listar todos os produtos
+            } else {
+                alert('Você precisa estar logado para visualizar seus produtos.');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Função para listar produtos cadastrados pelo usuário logado
+        function listarProdutos(userEmail, filtro = '') {
+            const tabelaBody = document.querySelector('#product-list tbody');
+            tabelaBody.innerHTML = ''; // Limpa a tabela antes de preencher
+
+            firestore.collection('produtos')
+                .where('IDcliente', '==', userEmail)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const produto = doc.data();
+
+                        // Verifica se existe um filtro e se o código de barras corresponde ao filtro
+                        if (filtro && !produto.codigoInterno.includes(filtro)) {
+                            return; // Se o filtro estiver ativo e o código não corresponder, pula este item
+                        }
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${produto.nome}</td>
+                            <td>${produto.codigoInterno}</td>
+                            <td class="action-buttons">
+                                <button class="edit-btn" onclick="editarProduto('${doc.id}')">Editar</button>
+                                <button class="delete-btn" onclick="deletarProduto('${doc.id}')">Deletar</button>
+                            </td>
+                        `;
+                        tabelaBody.appendChild(tr);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Erro ao listar produtos:', error);
+                });
+        }
+
+        // Função para filtrar produtos ao clicar no botão de busca
+        function filtrarProdutos() {
+            const filtro = document.getElementById('searchInput').value.trim();
+            const user = firebase.auth().currentUser;
+
+            if (user) {
+                listarProdutos(user.email, filtro);
+            }
+        }
+
+        // Função para deletar produto
+        function deletarProduto(id) {
+            firestore.collection('produtos').doc(id).delete().then(function() {
+                alert('Produto deletado com sucesso!');
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    listarProdutos(user.email); // Recarrega a lista de produtos após deletar
+                }
+            }).catch(function(error) {
+                console.error('Erro ao deletar produto:', error);
+            });
+        }
+
+        // Função para editar produto - lógica será adicionada no futuro
+        function editarProduto(id) {
+            alert('Função de edição em desenvolvimento.');
+        }
+    </script>
 </body>
 </html>
