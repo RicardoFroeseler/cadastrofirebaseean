@@ -88,7 +88,7 @@
             <!-- Botão para Enviar o Formulário -->
             <button type="submit" class="btn">Cadastrar Mercadoria</button>
             <br>
-            <p>Versao 1.6</p>
+            <p>Versao 1.7</p>
         </form>
     </div>
 <!-- Configuracao -->
@@ -132,7 +132,7 @@
             console.log('IDcliente (e-mail do usuário):', userEmail); // Log para verificar se o e-mail está correto
     
             // Coleta os dados do formulário
-            const codigoInterno = document.getElementById('codigoInterno').value;
+            const codigoInterno = document.getElementById('codigoInterno').value.trim(); // Adiciona trim para evitar espaços
             const nome = document.getElementById('nome').value;
             const precoCusto = parseFloat(document.getElementById('precoCusto').value);
             const precoVenda = parseFloat(document.getElementById('precoVenda').value);
@@ -140,6 +140,8 @@
             const quantidade = parseFloat(document.getElementById('quantidade').value);
             const unidade = document.getElementById('unidade').value;
             const fracionado = document.getElementById('fracionado').checked; // Checkbox retorna true ou false
+    
+            console.log('Verificando duplicidade para o código de barras:', codigoInterno); // Log para verificar código de barras
     
             // Verifica se já existe um produto com o mesmo código de barras
             firestore.collection('produtos').where('codigoInterno', '==', codigoInterno).get()
@@ -174,6 +176,7 @@
                 });
         });
     </script>
+    
     
     
 
