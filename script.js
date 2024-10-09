@@ -59,47 +59,30 @@ document.getElementById('pararCameraBtn')?.addEventListener('click', function() 
 });
 
 
-// Salvar produto no Firestore com e-mail do usuário autenticado como IDcliente
+// Salvar produto no Firestore
 document.getElementById('product-form')?.addEventListener('submit', function(e) {
   e.preventDefault();
 
-  const nome = document.getElementById('nome').value;
-  const precoCusto = parseFloat(document.getElementById('precoCusto').value);
-  const precoVenda = parseFloat(document.getElementById('precoVenda').value);
-  const grupo = document.getElementById('grupo').value;
-  const codigoBarras = document.getElementById('barcode-result').innerText || document.getElementById('codigoInterno').value;  // Verifica se há código escaneado ou digitado
+  var nome = document.getElementById('nome').value;
+  var precoCusto = parseFloat(document.getElementById('precoCusto').value);
+  var precoVenda = parseFloat(document.getElementById('precoVenda').value);
+  var grupo = document.getElementById('grupo').value;
+  var codigoBarras = document.getElementById('barcode-result').innerText || document.getElementById('codigoInterno').value;  // Verifica se há código escaneado ou digitado
 
-  // Obter o usuário autenticado
-  const user = firebase.auth().currentUser;
-  if (!user) {
-      alert('Você precisa estar logado para cadastrar produtos.');
-      return;
-  }
-
-  const userEmail = user.email; // Captura o e-mail do usuário autenticado
-  console.log('Usuário autenticado:', userEmail); // Log do e-mail do usuário para depuração
-
-  // Referência à coleção de produtos no Firestore
-  const produtosRef = firestore.collection('products');
-
-  // Adiciona o produto ao Firestore com o e-mail do usuário como IDcliente
-  produtosRef.add({
-      nome: nome,
-      precoCusto: precoCusto,
-      precoVenda: precoVenda,
-      grupo: grupo,
-      codigoBarras: codigoBarras,
-      IDcliente: userEmail,  // Adiciona o e-mail do usuário como campo IDcliente
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  firestore.collection('products').add({
+    nome: nome,
+    precoCusto: precoCusto,
+    precoVenda: precoVenda,
+    grupo: grupo,
+    codigoBarras: codigoBarras,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-      alert('Produto salvo com sucesso!');
-      document.getElementById('product-form').reset(); // Limpa o formulário após salvar
-      window.location.href = 'menu.html'; // Redireciona após salvar
+    alert('Produto salvo com sucesso!');
+    window.location.href = 'menu.html'; // Redireciona após salvar
   }).catch(function(error) {
-      console.error('Erro ao salvar produto:', error);
+    console.error('Erro ao salvar produto:', error);
   });
 });
-
 
 
 
