@@ -59,56 +59,31 @@ document.getElementById('pararCameraBtn')?.addEventListener('click', function() 
 });
 
 
-// Salvar produto no Firestore com verificação de duplicidade e e-mail do usuário
-document.getElementById('cadastroMercadoriaForm')?.addEventListener('submit', function(e) {
+// Salvar produto no Firestore
+document.getElementById('product-form')?.addEventListener('submit', function(e) {
   e.preventDefault();
 
-  const nome = document.getElementById('nome').value;
-  const precoCusto = parseFloat(document.getElementById('precoCusto').value);
-  const precoVenda = parseFloat(document.getElementById('precoVenda').value);
-  const grupo = document.getElementById('grupo').value;
-  const codigoBarras = document.getElementById('barcode-result').innerText || document.getElementById('codigoInterno').value;  // Verifica se há código escaneado ou digitado
+  var nome = document.getElementById('nome').value;
+  var precoCusto = parseFloat(document.getElementById('precoCusto').value);
+  var precoVenda = parseFloat(document.getElementById('precoVenda').value);
+  var grupo = document.getElementById('grupo').value;
+  var codigoBarras = document.getElementById('barcode-result').innerText || document.getElementById('codigoInterno').value;  // Verifica se há código escaneado ou digitado
 
-  // Obter o e-mail do usuário autenticado
-  const user = firebase.auth().currentUser;
-  if (!user) {
-      alert('Você precisa estar logado para cadastrar produtos.');
-      return;
-  }
-  const userEmail = user.email; // Obter o e-mail do usuário autenticado
-
-  // Referência à coleção de produtos no Firestore
-  const produtosRef = firestore.collection('products');
-
-  // Verifica se já existe um produto com o mesmo código de barras usando uma consulta assíncrona
-  produtosRef.where('codigoBarras', '==', codigoBarras).limit(1).get()
-      .then((querySnapshot) => {
-          if (!querySnapshot.empty) {
-              // Se já existe um produto com o mesmo código de barras, exibe uma mensagem de aviso
-              alert('Produto com o código de barras ' + codigoBarras + ' já está cadastrado!');
-          } else {
-              // Se não existe, cadastra o novo produto com o e-mail do usuário
-              produtosRef.add({
-                  nome: nome,
-                  precoCusto: precoCusto,
-                  precoVenda: precoVenda,
-                  grupo: grupo,
-                  codigoBarras: codigoBarras,
-                  userEmail: userEmail,  // Adiciona o e-mail do usuário que cadastrou o produto
-                  timestamp: firebase.firestore.FieldValue.serverTimestamp()
-              }).then(function() {
-                  alert('Produto salvo com sucesso!');
-                  document.getElementById('cadastroMercadoriaForm').reset(); // Limpa o formulário
-                  window.location.href = 'menu.html'; // Redireciona após salvar
-              }).catch(function(error) {
-                  console.error('Erro ao salvar produto:', error);
-              });
-          }
-      })
-      .catch(function(error) {
-          console.error('Erro ao verificar duplicidade de código de barras:', error);
-      });
+  firestore.collection('products').add({
+    nome: nome,
+    precoCusto: precoCusto,
+    precoVenda: precoVenda,
+    grupo: grupo,
+    codigoBarras: codigoBarras,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function() {
+    alert('Produto salvo com sucesso!');
+    window.location.href = 'menu.html'; // Redireciona após salvar
+  }).catch(function(error) {
+    console.error('Erro ao salvar produto:', error);
+  });
 });
+
 
 
 
