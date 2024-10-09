@@ -4,21 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Coletor de Dados</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- Link para o Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Link para o css -->
+    <link rel="stylesheet" href="./assets/styles/login.css">
+    
+
+    <!-- Cor da barra de navegação no Android (Chrome) -->
+    <meta name="theme-color" content="#ff7300">
+
+    <!-- Cor da barra de status no iOS (Safari) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 </head>
 <body>
     <div class="container">
         <!-- Conteúdo para Desktop -->
         <div class="desktop-content">
-            <h1>Desculpe, este site é apenas para celular</h1>
-            <h3>Este é nosso aplicativo web para criação de cadastros de forma mais rápida e intuitiva, agilizando um cadastro inicial no seu sistema ERP. Desta forma, ele é acessível apenas através do seu telefone.</h3>
+            <h1 class="h1desktop">Desculpe, este site é apenas para celular</h1>
+            <h3 class="h3desktop">Este é nosso aplicativo web para criação de cadastros de forma mais rápida e intuitiva, agilizando um cadastro inicial no seu sistema ERP. Desta forma, ele é acessível apenas através do seu telefone.</h3>
+            <br>
+            <h3 class="h3desktop">Acesse novamente pelo Telefone</h3>
             <a href="https://www.entregawhatsapp.com.br" class="btn-redirect">Veja mais sobre noss Aplicativo</a>
         </div>
 
         <!-- Conteúdo para Mobile -->
         <div class="mobile-content">
-            <h1>Bem-vindo ao Coletor de Dados</h1>
-            <button id="login-google" class="btn">Login com Google</button>
+            <h1 class="h1smart">Bem-vindo ao Coletor de Dados</h1>
+            <h3 class="h3desktop">Faca login com sua conta google para comecar a cadastrar sua lista</h3>
+
+            <button id="login-google" class="btn">
+                <i class="fa-brands fa-google"></i><!-- Ícone do Google Login -->
+                <span>Login com Google</span>  
+            </button>
+
         </div>
     </div>
 

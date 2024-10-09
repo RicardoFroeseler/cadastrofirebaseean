@@ -4,24 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Mercadorias</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="./assets/styles/cadastro.css">
+    
+
+   <!-- Cor da barra de navegação no Android (Chrome) -->
+   <meta name="theme-color" content="#ff7300">
+
+   <!-- Cor da barra de status no iOS (Safari) -->
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 </head>
 <body>
     <div class="container">
-        <h1>Cadastro de Mercadorias</h1>
+        <h3>Cadastro de Mercadorias</h3>
 
-        <!-- Exibição da versão do App -->
-        <p class="app-version">Versão do App: 2.3</p>
+        
 
         <!-- Formulário de Cadastro -->
         <form id="cadastroMercadoriaForm">
             <!-- Campo para Código Interno (Código de Barras ou QR Code) -->
             <div class="form-group">
-                <label for="codigoInterno">Código Interno (Código de Barras):</label>
-                <input type="text" id="codigoInterno" name="codigoInterno" placeholder="Escaneie o código de barras" readonly>
-                <button type="button" id="iniciarCameraBtn" class="btn">Ativar Câmera</button>
+                <label for="codigoInterno">Código Barras:</label>
+                <input type="text" id="codigoInterno" name="codigoInterno" placeholder="Codigo EAN" readonly>
+                <button type="button" id="iniciarCameraBtn" class="btn">
+                    <i class="fa-solid fa-camera"></i> Escanear
+                </button>
                 <button type="button" id="pararCameraBtn" class="btn" style="display: none;">Parar Câmera</button>
             </div>
+            
+            
 
             <!-- Área de Leitura de Câmera -->
             <div id="leitor-codigo" class="camera-view"></div>
@@ -75,6 +88,8 @@
             <button type="submit" class="btn">Cadastrar Mercadoria</button>
         </form>
     </div>
+
+<!-- Configuracao -->
 
     <!-- Firebase e Firestore -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>

@@ -1,0 +1,134 @@
+/* Reset de estilos globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Estilos globais para centralização */
+html, body {
+    height: 100vh; /* Garante que o html e body ocupem toda a altura da tela */
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    background: linear-gradient(90deg, #ffa238, #e5842a, #ff7300);
+}
+
+body {
+    background: transparent;
+}
+
+/* Ocultar conteúdo mobile por padrão */
+.mobile-content {
+    display: none;
+}
+
+/* Mostrar conteúdo mobile e ocultar desktop quando for uma tela pequena */
+@media (max-width: 768px) {
+    .desktop-content {
+        display: none; /* Esconder conteúdo de desktop em telas pequenas */
+    }
+
+    .mobile-content {
+        display: block; /* Mostrar conteúdo de mobile */
+    }
+}
+
+/* Container principal que centraliza o conteúdo */
+.container {
+    display: flex;
+    flex-direction: column; /* Garante que o conteúdo dentro do container seja disposto em coluna */
+    justify-content: center; /* Centraliza o conteúdo internamente */
+    align-items: center; /* Centraliza o conteúdo ao centro */
+    text-align: center; /* Texto centralizado */
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 90%;
+    animation: fadeIn 0.8s ease-in-out; /* Animação de entrada */
+}
+
+/* Estilos para cabeçalhos */
+h3 {
+    font-size: 20px;
+    color: #333333;
+    padding-bottom: 20px; 
+}
+
+/* Estilo para os botões */
+.btn {
+    background-color: #ff7300;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+.btn:hover {
+    background-color: #e5842a;
+    transform: translateY(-3px);
+}
+
+/* Estilo adicional para os botões com ícones */
+.btn i {
+    margin-right: 8px; /* Espaçamento entre o ícone e o texto */
+    vertical-align: middle; /* Alinha o ícone com o texto */
+}
+
+
+/* Estilo para os campos de entrada */
+input[type="text"], input[type="number"], input[type="bolean"], select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, input[type="bolean"]:focus, select:focus {
+    border-color: #ff7300;
+    outline: none;
+    background-color: #fff;
+}
+
+/* Estilo para checkbox */
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Animação de entrada suave */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ajustes de cor para melhor contraste */
+label {
+    font-size: 16px;
+    color: #505050;
+}
+
+/* Ajuste para mensagens de aviso ou erro */
+.message {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 10px;
+}

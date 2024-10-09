@@ -1,0 +1,172 @@
+* {
+    text-decoration: none;
+}
+
+/* Estilos globais aplicados a todos os dispositivos */
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to top left, #fef3c7, #fde68a, #dda919);
+    height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+body {
+    opacity: 100%;
+}
+
+/* Animações e transições */
+.container {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Container principal que centraliza o conteúdo */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Alinha o conteúdo ao centro para combinar com a referência */
+    text-align: center; /* Texto centralizado */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    width: 90%;
+    animation: fadeIn 0.8s ease-in-out; /* Animação de entrada */
+}
+
+/* Efeito de animação de fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ocultar conteúdo mobile por padrão */
+.mobile-content {
+    display: none;
+}
+
+/* Mostrar conteúdo mobile e ocultar desktop quando for uma tela pequena */
+@media (max-width: 768px) {
+    .desktop-content {
+        display: none; /* Esconder conteúdo de desktop em telas pequenas */
+    }
+
+    .mobile-content {
+        display: block; /* Mostrar conteúdo de mobile */
+    }
+}
+
+/* Estilo para a grade de itens do menu */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 26px; /* Espaçamento entre os itens */
+    width: 100%; /* Largura completa */
+    margin-top: 20px; /* Espaçamento superior entre o título e os itens */
+}
+
+/* Estilo para cada item do menu */
+.menu-item {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para os ícones e texto dos itens do menu */
+.menu-item img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.menu-item span {
+    font-size: 16px;
+    color: #2b1330;
+    font-weight: bold;
+}
+
+/* Estilo do botão de redirecionamento */
+.btn-redirect {
+    padding: 12px 24px;
+    background-color: #ff7043;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-redirect:hover {
+    background-color: #f4511e;
+    transform: scale(1.05); /* Leve aumento ao passar o mouse */
+}
+
+/* Estilo do botão de login */
+#login-google {
+    padding: 10px 20px;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#login-google:hover {
+    background-color: #3367d6;
+    transform: scale(1.05); /* Leve aumento ao passar o mouse */
+}
+
+/* Estilo para o botão de login no desktop - desativado */
+@media (min-width: 769px) {
+    #login-google {
+        background-color: #b0b0b0;
+        color: #ffffff;
+        cursor: not-allowed;
+        opacity: 0.6;
+        pointer-events: none;
+    }
+}
+
+
+/* Estilo para os ícones e texto dos itens do menu */
+.menu-item i {
+    font-size: 40px; /* Tamanho do ícone */
+    color: #2b1330; /* Cor do ícone */
+    margin-bottom: 20px; /* Espaçamento entre o ícone e o texto */
+    text-decoration: none;
+}
+
+.menu-item span {
+    font-size: 16px;
+    color: #2b1330;
+    font-weight: bold;
+}

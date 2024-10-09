@@ -1,0 +1,124 @@
+/* Reset de estilos globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Estilos globais para centralização */
+html, body {
+    height: 100vh; /* Garante que o html e body ocupem toda a altura da tela */
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    background: -webkit-linear-gradient(90deg, #ffa238,#e5842a,#ff7300);
+    background: linear-gradient(90deg, #ffa238,#e5842a,#ff7300);
+}
+
+body {
+    background: transparent;
+}
+
+/* Ocultar conteúdo mobile por padrão */
+.mobile-content {
+    display: none;
+}
+
+/* Mostrar conteúdo mobile e ocultar desktop quando for uma tela pequena */
+@media (max-width: 768px) {
+    .desktop-content {
+        display: none; /* Esconder conteúdo de desktop em telas pequenas */
+    }
+
+    .mobile-content {
+        display: block; /* Mostrar conteúdo de mobile */
+    }
+}
+
+/* Container principal que centraliza o conteúdo */
+.container {
+    display: flex;
+    flex-direction: column; /* Garante que o conteúdo dentro do container seja disposto em coluna */
+    justify-content: center; /* Centraliza o conteúdo internamente */
+    align-items: center; /* Centraliza o conteúdo ao centro */
+    text-align: center; /* Texto centralizado */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    width: 90%;
+    animation: fadeIn 0.8s ease-in-out; /* Animação de entrada */
+}
+
+
+/* inicio estilo para tela desktop */
+.h1desktop {
+    color: #dda919;
+    padding-bottom: 22px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.h3desktop {
+    font-size: 16px;
+    
+    color: #50504f6b;
+    padding-bottom: 36px;
+
+    
+}
+
+/* Estilo do botão de redirecionamento */
+.btn-redirect {
+    padding: 12px 24px;
+    background-color: #ff7043;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    
+}
+
+.btn-redirect:hover {
+    background-color: #f4511e;
+    
+}
+
+/* final estilo para tela desktop */
+
+/* inicio estilo para tela smartphone */
+.h1smart {
+    color: #dda919;
+    padding-bottom: 22px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+
+#login-google {
+    padding: 10px 20px;
+    background-color: #4285F4;
+    width: 250px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 52px;
+    margin-bottom: 22px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    
+}
+
+i {
+    margin-right: 16px;
+}
+
+#login-google:hover {
+    background-color: #3367d6;
+}
+
+/* inicio estilo para tela smartphone */
