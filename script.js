@@ -73,8 +73,8 @@ document.getElementById('product-form')?.addEventListener('submit', function(e) 
   const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
 
   if (!userId) {
-    alert('Você precisa estar logado para cadastrar produtos.');
-    return;
+      alert('Você precisa estar logado para cadastrar produtos.');
+      return;
   }
 
   // Referência à coleção de produtos no Firestore
@@ -82,32 +82,34 @@ document.getElementById('product-form')?.addEventListener('submit', function(e) 
 
   // Verifica se já existe um produto com o mesmo código de barras
   produtosRef.where('codigoBarras', '==', codigoBarras).get()
-    .then((querySnapshot) => {
-      if (!querySnapshot.empty) {
-        // Se já existe um produto com o mesmo código de barras, exibe uma mensagem de aviso
-        alert('Produto com o código de barras ' + codigoBarras + ' já está cadastrado!');
-      } else {
-        // Se não existe, cadastra o novo produto com o ID do usuário
-        produtosRef.add({
-          nome: nome,
-          precoCusto: precoCusto,
-          precoVenda: precoVenda,
-          grupo: grupo,
-          codigoBarras: codigoBarras,
-          userId: userId,  // Adiciona o ID do usuário que cadastrou o produto
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(function() {
-          alert('Produto salvo com sucesso!');
-          window.location.href = 'menu.html'; // Redireciona após salvar
-        }).catch(function(error) {
-          console.error('Erro ao salvar produto:', error);
-        });
-      }
-    })
-    .catch(function(error) {
-      console.error('Erro ao verificar duplicidade de código de barras:', error);
-    });
+      .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+              // Se já existe um produto com o mesmo código de barras, exibe uma mensagem de aviso
+              alert('Produto com o código de barras ' + codigoBarras + ' já está cadastrado!');
+          } else {
+              // Se não existe, cadastra o novo produto com o ID do usuário
+              produtosRef.add({
+                  nome: nome,
+                  precoCusto: precoCusto,
+                  precoVenda: precoVenda,
+                  grupo: grupo,
+                  codigoBarras: codigoBarras,
+                  userId: userId,  // Adiciona o ID do usuário que cadastrou o produto
+                  timestamp: firebase.firestore.FieldValue.serverTimestamp()
+              }).then(function() {
+                  alert('Produto salvo com sucesso!');
+                  document.getElementById('product-form').reset(); // Limpa o formulário
+                  window.location.href = 'menu.html'; // Redireciona após salvar
+              }).catch(function(error) {
+                  console.error('Erro ao salvar produto:', error);
+              });
+          }
+      })
+      .catch(function(error) {
+          console.error('Erro ao verificar duplicidade de código de barras:', error);
+      });
 });
+
 
 
 
