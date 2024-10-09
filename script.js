@@ -59,7 +59,7 @@ document.getElementById('pararCameraBtn')?.addEventListener('click', function() 
 });
 
 
-// Salvar produto no Firestore com verificação de duplicidade e ID do usuário
+// Salvar produto no Firestore com verificação de duplicidade e e-mail do usuário
 document.getElementById('cadastroMercadoriaForm')?.addEventListener('submit', function(e) {
   e.preventDefault();
 
@@ -69,32 +69,32 @@ document.getElementById('cadastroMercadoriaForm')?.addEventListener('submit', fu
   const grupo = document.getElementById('grupo').value;
   const codigoBarras = document.getElementById('barcode-result').innerText || document.getElementById('codigoInterno').value;  // Verifica se há código escaneado ou digitado
 
-  // Obter o ID do usuário autenticado
+  // Obter o e-mail do usuário autenticado
   const user = firebase.auth().currentUser;
   if (!user) {
       alert('Você precisa estar logado para cadastrar produtos.');
       return;
   }
-  const userId = user.uid; // Obter o ID do usuário autenticado
+  const userEmail = user.email; // Obter o e-mail do usuário autenticado
 
   // Referência à coleção de produtos no Firestore
   const produtosRef = firestore.collection('products');
 
-  // Verifica se já existe um produto com o mesmo código de barras
-  produtosRef.where('codigoBarras', '==', codigoBarras).get()
+  // Verifica se já existe um produto com o mesmo código de barras usando uma consulta assíncrona
+  produtosRef.where('codigoBarras', '==', codigoBarras).limit(1).get()
       .then((querySnapshot) => {
           if (!querySnapshot.empty) {
               // Se já existe um produto com o mesmo código de barras, exibe uma mensagem de aviso
               alert('Produto com o código de barras ' + codigoBarras + ' já está cadastrado!');
           } else {
-              // Se não existe, cadastra o novo produto com o ID do usuário
+              // Se não existe, cadastra o novo produto com o e-mail do usuário
               produtosRef.add({
                   nome: nome,
                   precoCusto: precoCusto,
                   precoVenda: precoVenda,
                   grupo: grupo,
                   codigoBarras: codigoBarras,
-                  userId: userId,  // Adiciona o ID do usuário que cadastrou o produto
+                  userEmail: userEmail,  // Adiciona o e-mail do usuário que cadastrou o produto
                   timestamp: firebase.firestore.FieldValue.serverTimestamp()
               }).then(function() {
                   alert('Produto salvo com sucesso!');
@@ -109,6 +109,7 @@ document.getElementById('cadastroMercadoriaForm')?.addEventListener('submit', fu
           console.error('Erro ao verificar duplicidade de código de barras:', error);
       });
 });
+
 
 
 
