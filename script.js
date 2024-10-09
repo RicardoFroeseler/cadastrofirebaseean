@@ -60,7 +60,7 @@ document.getElementById('pararCameraBtn')?.addEventListener('click', function() 
 
 
 // Salvar produto no Firestore com verificação de duplicidade e ID do usuário
-document.getElementById('product-form')?.addEventListener('submit', function(e) {
+document.getElementById('cadastroMercadoriaForm')?.addEventListener('submit', function(e) {
   e.preventDefault();
 
   const nome = document.getElementById('nome').value;
@@ -70,12 +70,12 @@ document.getElementById('product-form')?.addEventListener('submit', function(e) 
   const codigoBarras = document.getElementById('barcode-result').innerText || document.getElementById('codigoInterno').value;  // Verifica se há código escaneado ou digitado
 
   // Obter o ID do usuário autenticado
-  const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
-
-  if (!userId) {
+  const user = firebase.auth().currentUser;
+  if (!user) {
       alert('Você precisa estar logado para cadastrar produtos.');
       return;
   }
+  const userId = user.uid; // Obter o ID do usuário autenticado
 
   // Referência à coleção de produtos no Firestore
   const produtosRef = firestore.collection('products');
@@ -98,7 +98,7 @@ document.getElementById('product-form')?.addEventListener('submit', function(e) 
                   timestamp: firebase.firestore.FieldValue.serverTimestamp()
               }).then(function() {
                   alert('Produto salvo com sucesso!');
-                  document.getElementById('product-form').reset(); // Limpa o formulário
+                  document.getElementById('cadastroMercadoriaForm').reset(); // Limpa o formulário
                   window.location.href = 'menu.html'; // Redireciona após salvar
               }).catch(function(error) {
                   console.error('Erro ao salvar produto:', error);
@@ -109,6 +109,7 @@ document.getElementById('product-form')?.addEventListener('submit', function(e) 
           console.error('Erro ao verificar duplicidade de código de barras:', error);
       });
 });
+
 
 
 
