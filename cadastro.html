@@ -44,7 +44,7 @@
             <!-- Campo para Preço de Custo -->
             <div class="form-group">
                 <label for="precoCusto">Preço de Custo:</label>
-                <input type="bolean" id="precoCusto" name="precoCusto" placeholder="Preço de Custo">
+                <input type="number" id="precoCusto" name="precoCusto" placeholder="Preço de Custo" value="0" min="0">
             </div>
 
             <!-- Campo para Preço de Venda -->
@@ -89,7 +89,7 @@
             <!-- Botão para Enviar o Formulário -->
             <button type="submit" class="btn">Cadastrar Mercadoria</button>
             <br>
-            <p>Versão 1.9</p>
+            <p>Versão 2.0</p>
         </form>
     </div>
 <!-- Configuracao -->
@@ -135,7 +135,7 @@
             }
     
             const userEmail = user.email;
-            
+    
             firestore.collection('produtos')
                 .where('codigoInterno', '==', codigoInterno)
                 .where('IDcliente', '==', userEmail)
@@ -172,17 +172,18 @@
                 codigoInterno = '0' + codigoInterno;
             }
     
-            const nome = document.getElementById('nome').value;
-            const precoCusto = parseFloat(document.getElementById('precoCusto').value);
+            const nome = document.getElementById('nome').value.trim();
+            const precoCusto = parseFloat(document.getElementById('precoCusto').value) || 0; // Define o valor padrão como 0
             const precoVenda = parseFloat(document.getElementById('precoVenda').value);
-            const grupo = document.getElementById('grupo').value;
-            const quantidade = parseFloat(document.getElementById('quantidade').value);
+            const grupo = document.getElementById('grupo').value.trim();
+            const quantidade = parseFloat(document.getElementById('quantidade').value) || null; // Opcional
             const unidade = document.getElementById('unidade').value;
             const fracionado = document.getElementById('fracionado').checked;
     
-            if (!codigoInterno) {
-                alert('O campo de Código Barras é obrigatório. Por favor, escaneie ou insira um código de barras antes de continuar.');
-                return;
+            // Valida se os campos obrigatórios estão preenchidos
+            if (!codigoInterno || !nome || !precoVenda || !grupo || !unidade) {
+                alert('Por favor, preencha todos os campos obrigatórios: Código de Barras, Nome, Preço de Venda, Grupo e Unidade.');
+                return; // Impede o cadastro se algum campo obrigatório estiver vazio
             }
     
             // Verifica duplicidade antes de salvar o produto
@@ -192,7 +193,7 @@
                 .get()
                 .then((querySnapshot) => {
                     if (!querySnapshot.empty) {
-                        alert('Você já cadastrou um produto com o código de barras ' + codigoInterno + '!');
+                        alert('Você já cadastrou um produto com o código de barras ' + codigoInterno + ' !');
                     } else {
                         // Salva o produto se não for duplicado
                         firestore.collection('produtos').add({
@@ -209,6 +210,7 @@
                         }).then(() => {
                             alert('Produto cadastrado com sucesso!');
                             document.getElementById('cadastroMercadoriaForm').reset();
+                            document.getElementById('precoCusto').value = 0; // Reinicia o valor padrão do Preço de Custo
                         }).catch((error) => {
                             console.error('Erro ao salvar os dados:', error);
                         });
@@ -219,6 +221,7 @@
                 });
         });
     </script>
+    
     
     
     
