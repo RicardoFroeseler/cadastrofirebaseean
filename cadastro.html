@@ -6,22 +6,18 @@
     <title>Cadastro de Mercadorias</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./assets/styles/cadastro.css">
-    
 
-   <!-- Cor da barra de navegação no Android (Chrome) -->
-   <meta name="theme-color" content="#ff7300">
+    <!-- Cor da barra de navegação no Android (Chrome) -->
+    <meta name="theme-color" content="#ff7300">
 
-   <!-- Cor da barra de status no iOS (Safari) -->
-   <meta name="apple-mobile-web-app-capable" content="yes">
-   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+    <!-- Cor da barra de status no iOS (Safari) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
-    
+
     <div class="container">
         <h3>Cadastro de Mercadorias</h3>
-
-        
 
         <!-- Formulário de Cadastro -->
         <form id="cadastroMercadoriaForm">
@@ -32,10 +28,9 @@
                 <button type="button" id="iniciarCameraBtn" class="btn">
                     <i class="fa-solid fa-camera"></i> Escanear
                 </button>
+                <button type="button" id="verificarDuplicidadeBtn" class="btn">Verificar Duplicidade</button> <!-- Novo botão -->
                 <button type="button" id="pararCameraBtn" class="btn" style="display: none;">Parar Câmera</button>
             </div>
-            
-            
 
             <!-- Área de Leitura de Câmera -->
             <div id="leitor-codigo" class="camera-view"></div>
@@ -79,16 +74,22 @@
                 </select>
             </div>
 
-            <!-- Checkbox para Fracionado -->
+            <!-- Campo para Fracionado -->
             <div class="form-group">
                 <label for="fracionado">Fracionado:</label>
                 <input type="checkbox" id="fracionado" name="fracionado">
             </div>
 
+            <!-- Checkbox para adicionar zero à esquerda -->
+            <div class="form-group">
+                <label for="adicionarZeroCheckbox">Adicionar zero à esquerda:</label>
+                <input type="checkbox" id="adicionarZeroCheckbox" name="adicionarZeroCheckbox">
+            </div>
+
             <!-- Botão para Enviar o Formulário -->
             <button type="submit" class="btn">Cadastrar Mercadoria</button>
             <br>
-            <p>Versao 1.8</p>
+            <p>Versão 1.9</p>
         </form>
     </div>
 <!-- Configuracao -->
@@ -112,55 +113,88 @@
         // Certifica-se de que o Firebase está inicializado e verifica se o usuário está logado
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-                console.log('Usuário autenticado:', user.email); // Log do e-mail do usuário autenticado
+                console.log('Usuário autenticado:', user.email);
             } else {
                 console.log('Nenhum usuário autenticado. Por favor, faça login.');
             }
         });
     
-        document.getElementById('cadastroMercadoriaForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Previne o envio padrão do formulário
+        // Função para verificar duplicidade ao clicar no botão "Verificar Duplicidade"
+        document.getElementById('verificarDuplicidadeBtn').addEventListener('click', function() {
+            const codigoInterno = document.getElementById('codigoInterno').value.trim();
+            const user = firebase.auth().currentUser;
     
-            // Obter o usuário autenticado
+            if (!codigoInterno) {
+                alert('Por favor, insira ou escaneie um código de barras antes de verificar.');
+                return;
+            }
+    
+            if (!user) {
+                alert('Você precisa estar logado para verificar a duplicidade.');
+                return;
+            }
+    
+            const userEmail = user.email;
+            
+            firestore.collection('produtos')
+                .where('codigoInterno', '==', codigoInterno)
+                .where('IDcliente', '==', userEmail)
+                .get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        alert('Produto com o código de barras ' + codigoInterno + ' já está cadastrado para você!');
+                    } else {
+                        alert('Nenhum produto duplicado encontrado. Você pode cadastrar esse código.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Erro ao verificar duplicidade:', error);
+                });
+        });
+    
+        // Função para cadastrar o produto
+        document.getElementById('cadastroMercadoriaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+    
             const user = firebase.auth().currentUser;
             if (!user) {
                 alert('Você precisa estar logado para cadastrar produtos.');
                 return;
             }
     
-            const userEmail = user.email; // Captura o e-mail do usuário autenticado
-            console.log('IDcliente (e-mail do usuário):', userEmail); // Log para verificar se o e-mail está correto
+            const userEmail = user.email;
     
-            // Coleta os dados do formulário
-            const codigoInterno = document.getElementById('codigoInterno').value.trim();
+            // Coleta os dados do formulário e aplica lógica para adicionar zero à esquerda
+            let codigoInterno = document.getElementById('codigoInterno').value.trim();
+            const adicionarZero = document.getElementById('adicionarZeroCheckbox').checked;
+    
+            if (adicionarZero && !codigoInterno.startsWith('0')) {
+                codigoInterno = '0' + codigoInterno;
+            }
+    
             const nome = document.getElementById('nome').value;
             const precoCusto = parseFloat(document.getElementById('precoCusto').value);
             const precoVenda = parseFloat(document.getElementById('precoVenda').value);
             const grupo = document.getElementById('grupo').value;
             const quantidade = parseFloat(document.getElementById('quantidade').value);
             const unidade = document.getElementById('unidade').value;
-            const fracionado = document.getElementById('fracionado').checked; // Checkbox retorna true ou false
+            const fracionado = document.getElementById('fracionado').checked;
     
-            // Verifica se o campo de código de barras está preenchido
             if (!codigoInterno) {
                 alert('O campo de Código Barras é obrigatório. Por favor, escaneie ou insira um código de barras antes de continuar.');
-                return; // Impede o cadastro se o código de barras estiver vazio
+                return;
             }
     
-            console.log('Verificando duplicidade para o código de barras:', codigoInterno); // Log para verificar código de barras
-    
-            // Verifica se já existe um produto com o mesmo código de barras para o mesmo usuário (IDcliente)
+            // Verifica duplicidade antes de salvar o produto
             firestore.collection('produtos')
                 .where('codigoInterno', '==', codigoInterno)
-                .where('IDcliente', '==', userEmail) // Adiciona a verificação para o usuário específico
+                .where('IDcliente', '==', userEmail)
                 .get()
                 .then((querySnapshot) => {
                     if (!querySnapshot.empty) {
-                        // Se já existe um produto com o mesmo código de barras para o mesmo usuário, exibe uma mensagem de aviso
                         alert('Você já cadastrou um produto com o código de barras ' + codigoInterno + '!');
-                        console.warn('Tentativa de cadastrar produto duplicado para o mesmo usuário:', codigoInterno);
                     } else {
-                        // Se não existe, cadastra o novo produto com o e-mail do usuário como IDcliente
+                        // Salva o produto se não for duplicado
                         firestore.collection('produtos').add({
                             codigoInterno: codigoInterno,
                             nome: nome,
@@ -170,11 +204,11 @@
                             quantidade: quantidade,
                             unidade: unidade,
                             fracionado: fracionado,
-                            IDcliente: userEmail, // Adiciona o e-mail do usuário como campo IDcliente
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp() // Adiciona um timestamp
+                            IDcliente: userEmail,
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         }).then(() => {
                             alert('Produto cadastrado com sucesso!');
-                            document.getElementById('cadastroMercadoriaForm').reset(); // Limpa o formulário
+                            document.getElementById('cadastroMercadoriaForm').reset();
                         }).catch((error) => {
                             console.error('Erro ao salvar os dados:', error);
                         });
@@ -185,6 +219,7 @@
                 });
         });
     </script>
+    
     
     
     
