@@ -88,7 +88,7 @@
             <!-- Botão para Enviar o Formulário -->
             <button type="submit" class="btn">Cadastrar Mercadoria</button>
             <br>
-            <p>Versao 1.7</p>
+            <p>Versao 1.8</p>
         </form>
     </div>
 <!-- Configuracao -->
@@ -132,7 +132,7 @@
             console.log('IDcliente (e-mail do usuário):', userEmail); // Log para verificar se o e-mail está correto
     
             // Coleta os dados do formulário
-            const codigoInterno = document.getElementById('codigoInterno').value.trim(); // Adiciona trim para evitar espaços
+            const codigoInterno = document.getElementById('codigoInterno').value.trim();
             const nome = document.getElementById('nome').value;
             const precoCusto = parseFloat(document.getElementById('precoCusto').value);
             const precoVenda = parseFloat(document.getElementById('precoVenda').value);
@@ -141,15 +141,24 @@
             const unidade = document.getElementById('unidade').value;
             const fracionado = document.getElementById('fracionado').checked; // Checkbox retorna true ou false
     
+            // Verifica se o campo de código de barras está preenchido
+            if (!codigoInterno) {
+                alert('O campo de Código Barras é obrigatório. Por favor, escaneie ou insira um código de barras antes de continuar.');
+                return; // Impede o cadastro se o código de barras estiver vazio
+            }
+    
             console.log('Verificando duplicidade para o código de barras:', codigoInterno); // Log para verificar código de barras
     
-            // Verifica se já existe um produto com o mesmo código de barras
-            firestore.collection('produtos').where('codigoInterno', '==', codigoInterno).get()
+            // Verifica se já existe um produto com o mesmo código de barras para o mesmo usuário (IDcliente)
+            firestore.collection('produtos')
+                .where('codigoInterno', '==', codigoInterno)
+                .where('IDcliente', '==', userEmail) // Adiciona a verificação para o usuário específico
+                .get()
                 .then((querySnapshot) => {
                     if (!querySnapshot.empty) {
-                        // Se já existe um produto com o mesmo código de barras, exibe uma mensagem de aviso
-                        alert('Produto com o código de barras ' + codigoInterno + ' já está cadastrado!');
-                        console.warn('Tentativa de cadastrar produto duplicado:', codigoInterno);
+                        // Se já existe um produto com o mesmo código de barras para o mesmo usuário, exibe uma mensagem de aviso
+                        alert('Você já cadastrou um produto com o código de barras ' + codigoInterno + '!');
+                        console.warn('Tentativa de cadastrar produto duplicado para o mesmo usuário:', codigoInterno);
                     } else {
                         // Se não existe, cadastra o novo produto com o e-mail do usuário como IDcliente
                         firestore.collection('produtos').add({
@@ -176,6 +185,7 @@
                 });
         });
     </script>
+    
     
     
     
