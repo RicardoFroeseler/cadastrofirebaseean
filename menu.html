@@ -30,7 +30,7 @@
 
     <div class="container">
         <h1>Menu Principal</h1>
-        <p>Versão 3.1</p>
+        <p>Versão 3.2</p>
         <div class="menu-grid">
             <a href="cadastro.html" class="menu-item">
                 <i class="fa-solid fa-qrcode"></i> <!-- Ícone para Novo Cadastro -->
@@ -196,7 +196,7 @@
                         to_email: emailDestino,
                         from_name: userEmail,
                         message: "Segue em anexo a lista de produtos cadastrados.",
-                        attachment: btoa(jsonData), // Converte o JSON para Base64
+                        attachment: btoa(unescape(encodeURIComponent(jsonData))), // Corrigido para a conversão correta em Base64
                         filename: "produtos.json"
                     }
                 };
