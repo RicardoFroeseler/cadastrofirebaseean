@@ -21,13 +21,76 @@
 
     <!-- Link para SheetJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
+    <style>
+        /* Estilo para o modal pop-up */
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Estilo dos botões e campos do modal */
+        .modal input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal button {
+            background-color: #ff7300;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background-color: #e66b00;
+        }
+    </style>
+
 </head>
 
 <body>
 
     <div class="container">
         <h1>Menu Principal</h1>
-        <p>Versão 2.6</p>
+        <p>Versão 2.7</p>
         <div class="menu-grid">
             <a href="cadastro.html" class="menu-item">
                 <i class="fa-solid fa-qrcode"></i> <!-- Ícone para Novo Cadastro -->
@@ -38,15 +101,20 @@
                 <span>Editar/Deletar Cadastro</span>
             </a>
 
-            <!-- Campo para inserir o e-mail de destino -->
-            <div class="menu-item">
-                <input type="email" id="emailDestino" placeholder="Digite o e-mail para enviar" required>
-            </div>
-
-            <button id="export-excel" class="menu-item">
+            <button id="open-modal" class="menu-item">
                 <i class="fa-solid fa-envelope"></i> <!-- Ícone para Exportar arquivo para o banco -->
                 <span>Enviar o cadastro para o email</span>
             </button>
+        </div>
+    </div>
+
+    <!-- Modal para inserir o e-mail -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Enviar cadastro para o e-mail</h2>
+            <input type="email" id="emailDestino" placeholder="Digite o e-mail para enviar" required>
+            <button id="send-email-btn">Enviar</button>
         </div>
     </div>
 
@@ -55,6 +123,23 @@
         (function() {
             emailjs.init("U7zt4NFG0BMmx9sG9"); // Substitua pelo seu USER_ID público
         })();
+
+        // Função para abrir o modal
+        document.getElementById('open-modal').addEventListener('click', function() {
+            document.getElementById('emailModal').style.display = 'block';
+        });
+
+        // Função para fechar o modal
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('emailModal').style.display = 'none';
+        });
+
+        // Função para fechar o modal clicando fora dele
+        window.addEventListener('click', function(event) {
+            if (event.target == document.getElementById('emailModal')) {
+                document.getElementById('emailModal').style.display = 'none';
+            }
+        });
 
         // Função para obter os dados do Firestore e gerar o arquivo Excel
         async function gerarEEnviarExcel() {
@@ -115,6 +200,7 @@
                 emailjs.send("service_4iy90sa", "template_1a8tles", emailParams)
                     .then((response) => {
                         alert('E-mail enviado com sucesso!');
+                        document.getElementById('emailModal').style.display = 'none'; // Fecha o modal
                     }, (error) => {
                         console.error('Erro ao enviar e-mail:', error);
                         alert('Falha ao enviar o e-mail. Verifique as configurações.');
@@ -124,7 +210,8 @@
             }
         }
 
-        document.getElementById('export-excel').addEventListener('click', gerarEEnviarExcel);
+        // Quando o botão de enviar no modal for clicado, executa a função para gerar e enviar o Excel
+        document.getElementById('send-email-btn').addEventListener('click', gerarEEnviarExcel);
     </script>
 
 </body>
