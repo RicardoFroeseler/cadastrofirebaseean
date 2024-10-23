@@ -19,13 +19,21 @@
     <!-- Link para EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
+    <!-- Link para Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- Carregar a configuração do Firebase -->
+    <script src="firebaseConfig.js"></script>
+
 </head>
 
 <body>
 
     <div class="container">
         <h1>Menu Principal</h1>
-        <p>Versão 2.9</p>
+        <p>Versão 3.0</p>
         <div class="menu-grid">
             <a href="cadastro.html" class="menu-item">
                 <i class="fa-solid fa-qrcode"></i> <!-- Ícone para Novo Cadastro -->
@@ -151,6 +159,11 @@
                 return;
             }
 
+            // Verifica se o Firebase está inicializado
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig); // Certifica-se de que o Firebase está inicializado
+            }
+
             // Verifica se o usuário está logado
             const user = firebase.auth().currentUser;
             if (!user) {
@@ -159,7 +172,7 @@
             }
 
             const userEmail = user.email;
-            const produtosRef = firestore.collection('produtos').where('IDcliente', '==', userEmail);
+            const produtosRef = firebase.firestore().collection('produtos').where('IDcliente', '==', userEmail);
 
             try {
                 const snapshot = await produtosRef.get();
