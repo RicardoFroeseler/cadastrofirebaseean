@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./assets/styles/menu.css">
 
-
     <!-- Cor da barra de navegação no Android (Chrome) -->
     <meta name="theme-color" content="#ff7300">
 
@@ -17,13 +16,18 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+    <!-- Link para EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+    <!-- Link para SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 
 <body>
 
     <div class="container">
         <h1>Menu Principal</h1>
-        <p>Versão 2.5</p>
+        <p>Versão 2.6</p>
         <div class="menu-grid">
             <a href="cadastro.html" class="menu-item">
                 <i class="fa-solid fa-qrcode"></i> <!-- Ícone para Novo Cadastro -->
@@ -33,14 +37,96 @@
                 <i class="fa-solid fa-pen-to-square"></i> <!-- Ícone para Editar/Deletar Cadastro -->
                 <span>Editar/Deletar Cadastro</span>
             </a>
+
+            <!-- Campo para inserir o e-mail de destino -->
+            <div class="menu-item">
+                <input type="email" id="emailDestino" placeholder="Digite o e-mail para enviar" required>
+            </div>
+
             <button id="export-excel" class="menu-item">
                 <i class="fa-solid fa-envelope"></i> <!-- Ícone para Exportar arquivo para o banco -->
-                <span>Exportar arquivo para o banco</span>
+                <span>Enviar o cadastro para o email</span>
             </button>
         </div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <script>
+        // Inicialização do EmailJS
+        (function() {
+            emailjs.init("U7zt4NFG0BMmx9sG9"); // Substitua pelo seu USER_ID público
+        })();
+
+        // Função para obter os dados do Firestore e gerar o arquivo Excel
+        async function gerarEEnviarExcel() {
+            const emailDestino = document.getElementById('emailDestino').value;
+            if (!emailDestino) {
+                alert('Por favor, insira um e-mail válido.');
+                return;
+            }
+
+            const user = firebase.auth().currentUser;
+            if (!user) {
+                alert('Você precisa estar logado para exportar dados.');
+                return;
+            }
+
+            const userEmail = user.email;
+            const produtosRef = firestore.collection('produtos').where('IDcliente', '==', userEmail);
+
+            try {
+                const snapshot = await produtosRef.get();
+                if (snapshot.empty) {
+                    alert('Nenhum produto encontrado.');
+                    return;
+                }
+
+                // Cria um array para os dados do Excel
+                const dados = [];
+                snapshot.forEach((doc) => {
+                    const produto = doc.data();
+                    dados.push({
+                        Nome: produto.nome,
+                        Codigo_Barras: produto.codigoInterno,
+                        Preco_Custo: produto.precoCusto,
+                        Preco_Venda: produto.precoVenda,
+                        Grupo: produto.grupo,
+                        Quantidade: produto.quantidade,
+                        Unidade: produto.unidade,
+                        Fracionado: produto.fracionado ? "Sim" : "Não"
+                    });
+                });
+
+                // Usa SheetJS para criar o arquivo Excel
+                const ws = XLSX.utils.json_to_sheet(dados);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Produtos");
+
+                const arquivoExcel = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+
+                // Envia o Excel por e-mail usando EmailJS
+                const emailParams = {
+                    to_email: emailDestino,
+                    from_name: userEmail,
+                    message: "Segue em anexo a lista de produtos cadastrados.",
+                    attachment: arquivoExcel,
+                    filename: "produtos.xlsx"
+                };
+
+                emailjs.send("service_4iy90sa", "template_1a8tles", emailParams)
+                    .then((response) => {
+                        alert('E-mail enviado com sucesso!');
+                    }, (error) => {
+                        console.error('Erro ao enviar e-mail:', error);
+                        alert('Falha ao enviar o e-mail. Verifique as configurações.');
+                    });
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+            }
+        }
+
+        document.getElementById('export-excel').addEventListener('click', gerarEEnviarExcel);
+    </script>
+
 </body>
 
 </html>
