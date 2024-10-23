@@ -47,13 +47,13 @@
             <!-- Campo para Preço de Custo -->
             <div class="form-group">
                 <label for="precoCusto">Preço de Custo:</label>
-                <input type="bolean" id="precoCusto" name="precoCusto" placeholder="Preço de Custo" value="0" min="0">
+                <input type="number" id="precoCusto" name="precoCusto" placeholder="Preço de Custo" value="0" min="0">
             </div>
 
             <!-- Campo para Preço de Venda -->
             <div class="form-group">
                 <label for="precoVenda">Preço de Venda:</label>
-                <input type="bolean" id="precoVenda" name="precoVenda" placeholder="Preço de Venda">
+                <input type="number" id="precoVenda" name="precoVenda" placeholder="Preço de Venda">
             </div>
 
             <!-- Campo para Grupo -->
@@ -92,7 +92,7 @@
             <!-- Botão para Enviar o Formulário -->
             <button type="submit" class="btn">Cadastrar Mercadoria</button>
             <br>
-            <p>Versão 2.2</p>
+            <p>Versão 2.3</p>
         </form>
     </div>
 
@@ -118,6 +118,12 @@
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 console.log('Usuário autenticado:', user.email);
+                // Tenta carregar um produto para edição, se houver um id na URL
+                const params = new URLSearchParams(window.location.search);
+                const produtoId = params.get('id');
+                if (produtoId) {
+                    carregarProdutoParaEdicao(produtoId);
+                }
             } else {
                 console.log('Nenhum usuário autenticado. Por favor, faça login.');
             }
@@ -216,6 +222,39 @@
                     console.error('Erro ao cadastrar o produto:', error);
                 });
             }
+        });
+
+        // Função para verificar duplicidade ao clicar no botão "Verificar Duplicidade"
+        document.getElementById('verificarDuplicidadeBtn').addEventListener('click', function() {
+            const codigoInterno = document.getElementById('codigoInterno').value.trim();
+            const user = firebase.auth().currentUser;
+
+            if (!codigoInterno) {
+                alert('Por favor, insira ou escaneie um código de barras antes de verificar.');
+                return;
+            }
+
+            if (!user) {
+                alert('Você precisa estar logado para verificar a duplicidade.');
+                return;
+            }
+
+            const userEmail = user.email;
+    
+            firestore.collection('produtos')
+                .where('codigoInterno', '==', codigoInterno)
+                .where('IDcliente', '==', userEmail)
+                .get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        alert('Produto com o código de barras ' + codigoInterno + ' já está cadastrado para você!');
+                    } else {
+                        alert('Nenhum produto duplicado encontrado. Você pode cadastrar esse código.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Erro ao verificar duplicidade:', error);
+                });
         });
     </script>
 </body>
