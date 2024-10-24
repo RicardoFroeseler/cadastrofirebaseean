@@ -30,7 +30,7 @@
 
     <div class="container">
         <h1>Menu Principal</h1>
-        <p>Versão 3.3</p>
+        <p>Versão 3.4</p>
         <div class="menu-grid">
             <a href="cadastro.html" class="menu-item">
                 <i class="fa-solid fa-qrcode"></i> <!-- Ícone para Novo Cadastro -->
@@ -194,7 +194,7 @@
                 reader.onloadend = function() {
                     const base64data = reader.result.split(',')[1]; // Pega a parte Base64 da string
 
-                    // Envia o JSON por e-mail usando fetch (chamada da API do EmailJS diretamente)
+                    // Envia o JSON por e-mail usando EmailJS
                     const emailParams = {
                         service_id: 'service_4iy90sa',
                         template_id: 'template_1a8tles',
@@ -203,7 +203,7 @@
                             to_email: emailDestino,
                             from_name: userEmail,
                             message: "Segue em anexo a lista de produtos cadastrados.",
-                            attachment: base64data, // Usa o Base64 do arquivo
+                            attachment: `data:application/json;base64,${base64data}`, // Inclui o DataURL no formato base64
                             filename: "produtos.json"
                         }
                     };
