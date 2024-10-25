@@ -30,7 +30,7 @@
 
     <div class="container">
         <h1>Menu Principal</h1>
-        <p>Versão 3.5</p>
+        <p>Versão 3.6</p>
         <div class="menu-grid">
             <a href="cadastro.html" class="menu-item">
                 <i class="fa-solid fa-qrcode"></i> <!-- Ícone para Novo Cadastro -->
@@ -186,6 +186,9 @@
 
                 // Converte os dados em uma string JSON
                 const jsonData = JSON.stringify(dados, null, 2);
+                
+                // Exibe no console para verificação
+                console.log("JSON Gerado:", jsonData);
 
                 // Usa Blob para criar o arquivo JSON e gerar o Base64 corretamente
                 const blob = new Blob([jsonData], { type: 'application/json' });
